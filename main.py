@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 import pandas as pd
-
+from sklearn.metrics.pairwise import cosine_similarity
 app = FastAPI()
 
 df_PlayTimeGenre = pd.read_csv('PlayTimeGenre.csv')
@@ -8,6 +8,7 @@ df_UsersForGenre = pd.read_csv('UserForGenre.csv')
 df_UsersRecommendd = pd.read_csv('Usersrecommend.csv')
 df_UsersWorstDeveloper = pd.read_csv('UsersWorstDeveloper.csv')
 df_sentiment_analysis = pd.read_csv('sentiment_analysis.csv')
+df_recomendacion_juego = pd.read_csv('rec_juego.csv')
 @app.get('/PlayTimeGenre/{genre}')
 async def PlayTimegenre(genre: str):
     
@@ -79,3 +80,15 @@ async def sentiment_analysis(developer: str):
         }
     }
     return resultado
+
+@app.get('/Recomendacion_Jueo/{game}')
+async def recomendacion_juego(game : str):
+    '''Ingresando el nombre de producto, deberíamos recibir una lista con 5 juegos recomendados similares al ingresado.
+        Si es un sistema de recomendación user-item:'''
+    X = df_recomendacion_juego[['positivo', 'neutral', 'negativo', 'price', 'Action', 'Adventure', 'Casual', 'Desconocido', 'Education', 'Indie', 'Massively Multiplayer', 'RPG', 'Racing', 'Simulation', 'Sports', 'Strategy', 'Utilities']]
+    similarity_matrix = cosine_similarity(X)
+    juego_referencia_index = df_recomendacion_juego[df_recomendacion_juego['app_name'] == game].index[0]
+    similaridades = similarity_matrix[juego_referencia_index]
+    juegos_similares_indices = similaridades.argsort()[::-1][1:6]
+    juegos_similares = [(df_recomendacion_juego.iloc[indice]['app_name'], df_recomendacion_juego.iloc[indice]['price']) for indice in juegos_similares_indices]
+    return juegos_similares
