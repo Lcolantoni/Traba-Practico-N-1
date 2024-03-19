@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
+from starlette.responses import RedirectResponse
 app = FastAPI()
 
 
