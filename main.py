@@ -52,7 +52,7 @@ async def UserForGenre(genre: str):
 
 @app.get('/UsersRecommend/{year}')
 async def UsersRecommend(year: int):
-    filtered_df = df_UsersWorstDeveloper[df_UsersRecommendd['year'] == year]
+    filtered_df = df_UsersRecommendd[df_UsersRecommendd['year'] == year]
 
     if filtered_df.empty:
         return {"error": "No se encontraron datos para el año proporcionado."}
