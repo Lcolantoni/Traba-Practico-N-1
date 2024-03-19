@@ -1,12 +1,16 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import RedirectResponse
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
-from starlette.responses import RedirectResponse
+
 app = FastAPI()
 
-
-async def root():
-    return RedirectResponse(url="/docs")
+@app.middleware("http")
+async def redirect_root_to_docs(request: Request, call_next):
+    if request.url.path == "/":
+        return RedirectResponse(url="/docs", status_code=301)
+    response = await call_next(request)
+    return response
 
 df_PlayTimeGenre = pd.read_csv('PlayTimeGenre.csv')
 df_UsersForGenre = pd.read_csv('UserForGenre.csv')
