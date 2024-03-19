@@ -68,3 +68,7 @@ Si el proyecto fue de su agrado y quedaron dudas y/o sugerencias, no dude en con
 - Nombre: Colanoni Lucas
 - Teléfono: +54 3436 447764
 - Correo Electrónico: lucascolantoni@hotmail.com
+
+# video
+
+en el siguiente [enlace](https://drive.google.com/file/d/1YuoR0MG1RLFNy3XhTzagVvkHJ5yNCYLW/view?usp=sharing) puedes encontrar un pequeño video explicativo del proyecto
