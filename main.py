@@ -3,6 +3,10 @@ import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 app = FastAPI()
 
+
+async def root():
+    return RedirectResponse(url="/docs")
+
 df_PlayTimeGenre = pd.read_csv('PlayTimeGenre.csv')
 df_UsersForGenre = pd.read_csv('UserForGenre.csv')
 df_UsersRecommendd = pd.read_csv('Usersrecommend.csv')
