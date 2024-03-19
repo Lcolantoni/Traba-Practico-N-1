@@ -1,7 +1,15 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import RedirectResponse
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 app = FastAPI()
+
+@app.middleware("http")
+async def redirect_root_to_docs(request: Request, call_next):
+    if request.url.path == "/":
+        return RedirectResponse(url="/docs", status_code=301)
+    response = await call_next(request)
+    return response
 
 df_PlayTimeGenre = pd.read_csv('PlayTimeGenre.csv')
 df_UsersForGenre = pd.read_csv('UserForGenre.csv')
@@ -45,16 +53,15 @@ async def UserForGenre(genre: str):
 @app.get('/UsersRecommend/{year}')
 async def UsersRecommend(year: int):
     filtered_df = df_UsersWorstDeveloper[df_UsersRecommendd['year'] == year]
-    
+
     if filtered_df.empty:
         return {"error": "No se encontraron datos para el año proporcionado."}
-    
-    sorted_df = filtered_df.sort_values(by=['score1', 'score2', 'score3'])
-    
-    top_3_developers = sorted_df[['best1', 'best2', 'best3']].iloc[:3].values.flatten().tolist()
-    
-    return {"top 3 best developers": top_3_developers}
 
+    sorted_df = filtered_df.sort_values(by=['score1', 'score2', 'score3'])
+
+    top_3_developers = sorted_df[['best1', 'best2', 'best3']].iloc[:3].values.flatten().tolist()
+
+    return {"top 3 best developers": top_3_developers}
 
 @app.get('/UsersWorstDeveloper/{year}')
 async def UsersWorstDeveloper(year: int):
